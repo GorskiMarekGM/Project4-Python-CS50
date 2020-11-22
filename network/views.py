@@ -19,6 +19,16 @@ def index(request):
         "posts_list" : posts_list,
     })
 
+# PROFILE
+def profile(request):
+    user = request.user
+    followers = User.objects.get()
+
+    return render(request, "network/profile.html",{
+        "posts_list" : posts_list,
+    })
+
+# POSTS
 def addPost(request):
     if request.method == "POST":
         form = PostForm(request.POST)

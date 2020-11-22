@@ -1,0 +1,28 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <div class="posts-container">
+        <h2>Posts</h2>
+
+        {% for post in posts_list %}
+            
+            <div class="post">
+    
+                <h3>{{post.title}}</h3>
+                <hr>
+                
+                <h5>{{post.text}}</h5>
+                
+                <div class="date">
+                    Date of creation: <br>
+                    {{post.creation_date}}
+                </div> 
+                
+            </div>
+                
+        {% endfor %}
+    </div>
+    
+{% endblock %}

@@ -12,6 +12,7 @@ urlpatterns = [
 
     path("addPost", views.addPost, name="addPost"),
     path("postsList", views.postsList, name="postsList"),
+    path("profile", views.profile, name="profile"),
 
 
 ]

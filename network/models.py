@@ -3,7 +3,9 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    followers = models.IntegerField()
+    following = models.IntegerField()
+
 
 class Post(models.Model):
     title = models.CharField(max_length=64)
