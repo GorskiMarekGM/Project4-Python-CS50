@@ -3,26 +3,46 @@
 
 {% block body %}
 
-    <div class="posts-container">
-        <h2>Posts</h2>
-
-        {% for post in posts_list %}
-            
-            <div class="post">
-    
-                <h3>{{post.title}}</h3>
-                <hr>
-                
-                <h5>{{post.text}}</h5>
-                
-                <div class="date">
-                    Date of creation: <br>
-                    {{post.creation_date}}
-                </div> 
-                
-            </div>
-                
-        {% endfor %}
+<div class="profile-container">
+    <div class="profile-top">
+            {{user.username}}
     </div>
+    <div class="grid">
+        <div class="grid-item">Followers</div>
+        <div class="grid-item"></div>
+        <div class="grid-item">Following</div>
+        <div class="grid-item">{{user.followers}}</div>
+        <div class="grid-item"></div>
+        <div class="grid-item">{{user.following}}</div>
+    </div>
+</div>
+
+<!-- posts section -->
+<div class="posts-container">
+    <h2>Posts</h2>
+
+    {% for post in posts_list %}
+        
+        <div class="post">
+
+            <h3>{{post.title}}</h3>
+            <hr>
+            
+            <h5>{{post.text}}</h5>
+            <br>
+            <h5 style="font-size: 15px;">Created by: {{post.author}}</h5>
+            
+            <div class="date">
+                Date of creation: <br>
+                {{post.creation_date}}
+            </div> 
+            <div class="likes">
+                likes: {{post.likes}}
+            </div>
+            
+        </div>
+            
+    {% endfor %}
+</div>
     
 {% endblock %}

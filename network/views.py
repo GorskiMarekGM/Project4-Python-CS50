@@ -21,11 +21,12 @@ def index(request):
 
 # PROFILE
 def profile(request):
-    user = request.user
-    followers = User.objects.get()
+    posts_list = Post.objects.filter(author=request.user).order_by('-creation_date')
+
 
     return render(request, "network/profile.html",{
         "posts_list" : posts_list,
+        "user": request.user,
     })
 
 # POSTS
