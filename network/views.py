@@ -1,16 +1,41 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from django import forms
 
-from .models import User
+from .models import User, Post
 
+class PostForm(forms.Form):
+    title = forms.CharField(label="title")
+    postText = forms.Textarea()
 
 def index(request):
     return render(request, "network/index.html")
 
+def addPost(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            postText = form.data["postText"]
 
+        else:
+            message = "Invalid form... Try again."
+            return render(request,"network/index.html",{
+            })
+            
+        new_post = Post(title = title, text= postText, likes = 0, author= request.user)
+        new_post.save()
+
+        return redirect('index')
+        
+    return redirect('index')
+
+
+
+# LOGING, AND SIGNING SECTION
 def login_view(request):
     if request.method == "POST":
 

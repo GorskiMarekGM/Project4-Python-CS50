@@ -1,15 +1,20 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+
+{% if user.is_authenticated %}
 <div class="post-add-container">
-    <form action="" method="POST">
+    <form action="{% url 'addPost' %}" method="POST">
         {% csrf_token %}
         <h3>New Post</h3>
-        <textarea class="form-control rounded-0" name="post-textarea" rows="5"></textarea>
-        <input type="hidden" name="auction_id" value=""></input>
+        Title: <input name="title"></input>
+        <br>
+        <textarea class="form-control rounded-0" name="postText" rows="5"></textarea>
+       
         <br>
         <input type="submit" value="Post" class="btn btn-primary mb-2">
     </form>
 </div>
+{% endif %}
     
 {% endblock %}
