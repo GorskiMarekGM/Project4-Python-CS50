@@ -11,6 +11,7 @@ urlpatterns = [
 
 
     path("addPost", views.addPost, name="addPost"),
+    path("postsList", views.postsList, name="postsList"),
 
 
 ]

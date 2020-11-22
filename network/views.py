@@ -35,7 +35,12 @@ def addPost(request):
         
     return redirect('index')
 
+def postsList(request):
+    posts_list = Post.objects.all().order_by('-creation_date')
 
+    return render(request, "network/posts.html",{
+        "posts_list" : posts_list,
+    })
 
 # LOGING, AND SIGNING SECTION
 def login_view(request):
