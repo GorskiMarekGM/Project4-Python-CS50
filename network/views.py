@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
+from datetime import datetime
 
 from .models import User, Post
 
@@ -20,13 +21,14 @@ def addPost(request):
         if form.is_valid():
             title = form.cleaned_data["title"]
             postText = form.data["postText"]
+            date = datetime.now()
 
         else:
             message = "Invalid form... Try again."
             return render(request,"network/index.html",{
             })
             
-        new_post = Post(title = title, text= postText, likes = 0, author= request.user)
+        new_post = Post(title = title, text= postText,creation_date=date, likes = 0, author= request.user)
         new_post.save()
 
         return redirect('index')

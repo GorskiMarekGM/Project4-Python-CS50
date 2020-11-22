@@ -4,6 +4,6 @@ from .models import Post
 # Register your models here.
 
 class PostAdmin(admin.ModelAdmin):
-    posts = ("id","title","likes","author")
+    posts = ("id","title","text","likes","creation_date","author")
 
 admin.site.register(Post,PostAdmin)
