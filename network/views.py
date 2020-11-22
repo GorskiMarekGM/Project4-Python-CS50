@@ -13,7 +13,11 @@ class PostForm(forms.Form):
     postText = forms.Textarea()
 
 def index(request):
-    return render(request, "network/index.html")
+    posts_list = Post.objects.all().order_by('-creation_date')
+
+    return render(request, "network/index.html",{
+        "posts_list" : posts_list,
+    })
 
 def addPost(request):
     if request.method == "POST":

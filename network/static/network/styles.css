@@ -1,9 +1,14 @@
 .post-add-container{
-    height: 350px;
+    height: 400px;
     width: 50%;
     padding: 20px;
     margin: 20px;
+    background-color: #f3f3f3;
     border: 1px solid rgb(221, 218, 218);
+}
+.posts-container{
+    padding: 20px;
+    margin: 20px;
 }
 .post{
     height: 20%;
@@ -12,4 +17,8 @@
     border: 1px solid rgb(221, 218, 218);
     padding: 20px;
     margin: 20px;
+}
+.date{
+    font-size: 10px; 
+    color: gray;
 }
