@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
@@ -19,8 +20,20 @@ def index(request):
         "posts_list" : posts_list,
     })
 
+# JSON
+@login_required
+def profile_json(request):
+    following = User.objects.get(id = request.user.id).following
+    followers = User.objects.get(id = request.user.id).followers
+    data = {
+        "following": following,
+        "followers": followers,
+    }
+
+    return JsonResponse(data)
+
 # PROFILE
-def profile(request):
+def profile(request,id):
     posts_list = Post.objects.filter(author=request.user).order_by('-creation_date')
 
 

@@ -4,17 +4,23 @@
 {% block body %}
 
 <div class="profile-container">
-    <div class="profile-top">
-            {{user.username}}
-    </div>
-    <div class="grid">
-        <div class="grid-item">Followers</div>
-        <div class="grid-item"></div>
-        <div class="grid-item">Following</div>
-        <div class="grid-item">{{user.followers}}</div>
-        <div class="grid-item"></div>
-        <div class="grid-item">{{user.following}}</div>
-    </div>
+    <div class="row" style="text-align: center;">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">{{user.username}}</div>
+        <div class="col-sm-2"></div>
+      </div>
+      <div class="row" style="text-align: center;">
+        <div class="col-sm">Followers</div>
+        <div class="col-sm"></div>
+        <div class="col-sm">Following</div>
+      </div>
+      <div class="row" style="text-align: center;">
+        <div class="col-sm">{{user.followers}}</div>
+        {% if user.is_authenticated %}
+            <div class="col-sm"><button type="button" id="button" class="btn btn-primary">Follow</button></div>
+        {% endif %}
+        <div class="col-sm">{{user.following}}</div>
+      </div>
 </div>
 
 <!-- posts section -->
@@ -44,5 +50,17 @@
             
     {% endfor %}
 </div>
+
+<script>
+
+    //we need to call this function to render whole page
+    document.addEventListener('DOMContentLoaded',function(){
+        // Button clicked
+        document.getElementById('button').onclick = () => {
+            console.log('debil')
+        }
+
+    });
+</script>
     
 {% endblock %}
