@@ -43,6 +43,13 @@ def all_posts(request):
     json_data = serializers.serialize("json", posts)
     return HttpResponse(json_data, content_type='application/json')
 
+def user_posts(request, profile_id):
+    author = User.objects.get(id = profile_id)
+    posts = Post.objects.filter( author = author).order_by('-creation_date')
+
+    json_data = serializers.serialize("json", posts)
+    return HttpResponse(json_data, content_type='application/json')
+
 
 # PROFILE
 def profile(request):
@@ -81,6 +88,8 @@ def postsList(request):
     return render(request, "network/posts.html",{
         "posts_list" : posts_list,
     })
+
+
 
 # LOGING, AND SIGNING SECTION
 def login_view(request):
