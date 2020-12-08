@@ -3,8 +3,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-    followers = models.IntegerField()
-    following = models.IntegerField()
+    followers = models.IntegerField(blank=True, null=True)
+    following = models.IntegerField(blank=True, null=True)
 
 
 class Post(models.Model):

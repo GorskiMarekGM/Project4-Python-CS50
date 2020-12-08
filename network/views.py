@@ -22,10 +22,12 @@ def index(request):
 
 # JSON
 @login_required
-def profile_json(request):
-    following = User.objects.get(id = request.user.id).following
-    followers = User.objects.get(id = request.user.id).followers
+def profile_json(request,profile_id):
+    following = User.objects.get(id = profile_id).following
+    followers = User.objects.get(id = profile_id).followers
+    username = User.objects.get(id = profile_id).username
     data = {
+        "userName": username,
         "following": following,
         "followers": followers,
     }
@@ -33,7 +35,7 @@ def profile_json(request):
     return JsonResponse(data)
 
 # PROFILE
-def profile(request,id):
+def profile(request):
     posts_list = Post.objects.filter(author=request.user).order_by('-creation_date')
 
 

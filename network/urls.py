@@ -14,7 +14,7 @@ urlpatterns = [
     path("profile", views.profile, name="profile"),
 
     #API routes
-    path("profile/<int:profile_id>", views.profile, name="profile"),
+    path("profile/<int:profile_id>", views.profile_json, name="profile_json"),
 
 
 ]
