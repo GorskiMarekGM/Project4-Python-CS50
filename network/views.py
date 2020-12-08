@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
 from datetime import datetime
+import json
+from django.core import serializers
 
 from .models import User, Post
 
@@ -26,6 +28,7 @@ def profile_json(request,profile_id):
     following = User.objects.get(id = profile_id).following
     followers = User.objects.get(id = profile_id).followers
     username = User.objects.get(id = profile_id).username
+    
     data = {
         "userName": username,
         "following": following,
@@ -33,6 +36,13 @@ def profile_json(request,profile_id):
     }
 
     return JsonResponse(data)
+
+def all_posts(request):
+    posts = Post.objects.all().order_by('-creation_date')
+
+    json_data = serializers.serialize("json", posts)
+    return HttpResponse(json_data, content_type='application/json')
+
 
 # PROFILE
 def profile(request):
