@@ -25,6 +25,7 @@ class Post(models.Model):
             "likes": self.likes,
             "creation_date": self.creation_date.strftime("%b %d %Y, %I:%M %p"),
             "author": self.author.username,
+            "author_id": self.author.id,
         }
 
     def __str__(self):

@@ -5,9 +5,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#all_posts').addEventListener('click', () => get_posts());
     //document.querySelector('#network').addEventListener('click', () => get_posts());
     // document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
-    // document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
+
+    // Listen for user name click
+    //document.querySelector('.get-user').addEventListener('click', () => get_profile(dataset.user));
     // document.querySelector('#compose').addEventListener('click', compose_email);
-        
+    //data-user="${obj.author_id}"
      // Show compose view and hide other views
     //document.querySelector('#compose-view').style.display = 'block';
 
@@ -19,9 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function get_profile_page(){
     try {
         const userData = document.querySelector('#profile_link');
-
+        
         // Use buttons to toggle between views
-        //document.querySelector('#profile_link').addEventListener('click', () => get_user_posts(parseInt(userData.dataset.userid)));
         document.querySelector('#profile_link').addEventListener('click', () => get_profile(userData.dataset.userid));
 
     } catch (error) {
@@ -81,8 +82,9 @@ function get_posts(){
                 
                 <h5>${obj.text}</h5>
                 <br>
-                <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
-                
+                <div class="get-user" onclick = "get_profile(${obj.author_id})">
+                    <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
+                </div>
                 <div class="date">
                     Date of creation: <br>
                     ${obj.creation_date}
@@ -108,8 +110,9 @@ function get_user_posts(profile_id){
                 
                 <h5>${obj.text}</h5>
                 <br>
-                <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
-                
+                <div class="get-user" onclick = "get_profile(${obj.author_id})">
+                    <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
+                </div>
                 <div class="date">
                     Date of creation: <br>
                     ${obj.creation_date}

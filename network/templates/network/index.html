@@ -38,8 +38,9 @@ function get_posts(){
                 
                 <h5>${obj.text}</h5>
                 <br>
-                <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
-                
+                <div class="get-user" onclick = "get_profile(${obj.author_id})">
+                    <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
+                </div>
                 <div class="date">
                     Date of creation: <br>
                     ${obj.creation_date}
