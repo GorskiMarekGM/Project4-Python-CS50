@@ -16,7 +16,7 @@
               <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}"><strong>{{ user.username }}</strong></a>
+                        <a class="nav-link" id="profile_link" data-userid={{user.id}}><strong>{{ user.username }}</strong></a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
@@ -43,13 +43,18 @@
           <div id="here">
               
           </div>
-        
         <div class="body">
             {% block body %}
             {% endblock %}
-            
-            {% block post %}
+        </div>
+        <div class="new_post">
+            {% block new_post %}
             {% endblock %}
+        </div>
+
+        <!-- JS -->
+        <div class="posts-view">
+
         </div>
 
         <script src="{% static 'network/js.js' %}"></script>

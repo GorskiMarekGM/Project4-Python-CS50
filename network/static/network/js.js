@@ -2,10 +2,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Use buttons to toggle between views
-    document.querySelector('.post').addEventListener('click', () => console.log('Post clicked!'));
-
-    get_user_posts(2);
+    //document.querySelector('.post').addEventListener('click', () => console.log('Post clicked!'));
+                
+    get_profile_page();
+    
+    get_posts();
 });
+
+function get_profile_page(){
+    try {
+        const userData = document.querySelector('#profile_link');
+        // Use buttons to toggle between views
+        //document.querySelector('#profile_link').addEventListener('click', () => get_profile(userData.dataset.userid));
+        document.querySelector('#profile_link').addEventListener('click', () => get_user_posts(userData.dataset.userid));
+
+    } catch (error) {
+        
+    }
+}
 
 
 //   // Show compose view and hide other views
@@ -13,6 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
 //   document.querySelector('#compose-view').style.display = 'block';
 
 function get_profile(profile_id){
+
+document.querySelector('.new_post').innerHTML = '';
+document.querySelector('.posts-view').innerHTML = '';
+
 fetch('/profile/'+profile_id)
   .then(response => response.json())
   .then(data => {
@@ -38,6 +56,21 @@ fetch('/profile/'+profile_id)
   });
 }
 
+//Fix this function
+function get_profile_name(profile_id){
+
+    var username;
+    
+    fetch('/profile/'+profile_id)
+      .then(response => response.json())
+      .then(data => {
+          username = data.userName.toString();
+          console.log(username);
+        
+      });
+    return username;
+}
+
 async function get_posts(){
     const response = await fetch('/all_posts');
     const data = await response.json();
@@ -52,7 +85,7 @@ async function get_posts(){
             
             <h5>${obj.fields.text}</h5>
             <br>
-            <h5 style="font-size: 15px;">Created by: ${obj.fields.author.username}</h5>
+            <h5 style="font-size: 15px;">Created by: ${obj.fields.author}</h5>
             
             <div class="date">
                 Date of creation: <br>
@@ -81,7 +114,7 @@ async function get_user_posts(profile_id){
             
             <h5>${obj.fields.text}</h5>
             <br>
-            <h5 style="font-size: 15px;">Created by: ${obj.fields.author.username}</h5>
+            <h5 style="font-size: 15px;">Created by: ${obj.fields.author}</h5>
             
             <div class="date">
                 Date of creation: <br>
