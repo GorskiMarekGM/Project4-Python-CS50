@@ -2,8 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Use buttons to toggle between views
-    //document.querySelector('.post').addEventListener('click', () => console.log('Post clicked!'));
-                
+    document.querySelector('#all_posts').addEventListener('click', () => get_posts());
+    //document.querySelector('#network').addEventListener('click', () => get_posts());
+    // document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
+    // document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
+    // document.querySelector('#compose').addEventListener('click', compose_email);
+        
+     // Show compose view and hide other views
+    //document.querySelector('#compose-view').style.display = 'block';
+
     get_profile_page();
     //get_user_posts(2);
     //get_posts();
@@ -27,7 +34,7 @@ function get_profile_page(){
 
 function get_profile(profile_id){
 
-document.querySelector('.new_post').innerHTML = '';
+document.querySelector('.new_post').style.display = 'none';
 document.querySelector('.posts-view').innerHTML = '';
 
 fetch('/profile/'+profile_id)
@@ -59,6 +66,9 @@ fetch('/profile/'+profile_id)
 }
 
 function get_posts(){
+    document.querySelector('.new_post').style.display = 'none';
+    document.querySelector('.posts-view').innerHTML = '';
+
     fetch('/all_posts')
       .then(response => response.json())
       .then(data => {

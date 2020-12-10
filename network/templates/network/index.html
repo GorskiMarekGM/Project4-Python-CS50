@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block new_post %}
 
@@ -19,4 +20,38 @@
     </form>
 </div>
 {% endif %}
+
+<div class="network-post"></div>
+<script>
+function get_posts(){
+    document.querySelector('.network-post').innerHTML = '';
+
+    fetch('/all_posts')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        data.forEach(obj => {
+            document.querySelector('.network-post').innerHTML += `
+            <div class="post">
+                <h3>${obj.title}</h3>
+                <hr>
+                
+                <h5>${obj.text}</h5>
+                <br>
+                <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
+                
+                <div class="date">
+                    Date of creation: <br>
+                    ${obj.creation_date}
+                </div> 
+                <div class="likes">
+                    likes: ${obj.likes}
+                </div>
+            </div>
+            `;
+      });
+    });
+}
+get_posts();
+</script>
 {% endblock %}

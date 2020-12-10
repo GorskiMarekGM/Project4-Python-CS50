@@ -45,7 +45,7 @@ def all_posts(request):
 
 def user_posts(request, profile_id):
     author = User.objects.get(id = profile_id)
-    
+
     # Return posts in reverse chronologial order
     posts = Post.objects.filter( author = author).order_by("-creation_date").all()
     return JsonResponse([post.serialize() for post in posts], safe=False)
@@ -83,12 +83,12 @@ def addPost(request):
         
     return redirect('index')
 
-def postsList(request):
-    posts_list = Post.objects.all().order_by('-creation_date')
+# def postsList(request):
+#     posts_list = Post.objects.all().order_by('-creation_date')
 
-    return render(request, "network/posts.html",{
-        "posts_list" : posts_list,
-    })
+#     return render(request, "network/posts.html",{
+#         "posts_list" : posts_list,
+#     })
 
 
 
