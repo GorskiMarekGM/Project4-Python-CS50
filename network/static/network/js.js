@@ -21,8 +21,6 @@ function get_profile_page(){
         
     }
 }
-
-
 //   // Show compose view and hide other views
 //   document.querySelector('#posts-view').style.display = 'none';
 //   document.querySelector('#compose-view').style.display = 'block';
@@ -60,21 +58,6 @@ fetch('/profile/'+profile_id)
   });
 }
 
-//Fix this function
-function get_profile_name(profile_id){
-
-    var username;
-    
-    fetch('/profile/'+profile_id)
-      .then(response => response.json())
-      .then(data => {
-          username = data.userName.toString();
-          console.log(username);
-        
-      });
-    return username;
-}
-
 function get_posts(){
     fetch('/all_posts')
       .then(response => response.json())
@@ -102,33 +85,6 @@ function get_posts(){
       });
     });
 }
-// 
-function get_inbox(mailbox){
-    let i = 0;
-    fetch('/emails/'+mailbox)
-    .then(response => response.json())
-    .then(emails => {
-  
-      emails.forEach(email => {
-  
-        document.querySelector('#emails-view').innerHTML += `<div class="card" style="width: 18rem;">
-              <div id="email-${i}">
-                <div class="card-body" style="cursor:pointer;">
-                  <h5 class="card-title">${email.subject}</h5>
-                  <h6 class="card-subtitle mb-2">From: ${email.sender}</h6>
-                  <p class="card-text">${email.body}</p>
-                  <h6 class="card-subtitle mb-2">${email.timestamp}</h6>
-                  <button onclick="archive(${email.id})" class="btn btn-sm btn-outline-primary" style="background-color:white" >Archive</button>
-                </div>
-              </div>
-            </div>
-        `;
-        i++;
-      });
-  
-    });
-  }
-//
 
 function get_user_posts(profile_id){
     fetch('/user_posts/'+profile_id)
