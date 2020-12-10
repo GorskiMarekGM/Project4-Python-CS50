@@ -5,16 +5,17 @@ document.addEventListener('DOMContentLoaded', function() {
     //document.querySelector('.post').addEventListener('click', () => console.log('Post clicked!'));
                 
     get_profile_page();
-    
+    //get_user_posts(2);
     //get_posts();
 });
 
 function get_profile_page(){
     try {
         const userData = document.querySelector('#profile_link');
+
         // Use buttons to toggle between views
-        //document.querySelector('#profile_link').addEventListener('click', () => get_profile(userData.dataset.userid));
-        document.querySelector('#profile_link').addEventListener('click', () => get_user_posts(userData.dataset.userid));
+        //document.querySelector('#profile_link').addEventListener('click', () => get_user_posts(parseInt(userData.dataset.userid)));
+        document.querySelector('#profile_link').addEventListener('click', () => get_profile(userData.dataset.userid));
 
     } catch (error) {
         
@@ -53,6 +54,9 @@ fetch('/profile/'+profile_id)
         </div>
     </div>
       `;
+
+    //after displaying profile display user posts
+    get_user_posts(profile_id);
   });
 }
 
@@ -74,27 +78,29 @@ function get_profile_name(profile_id){
 function get_posts(){
     fetch('/all_posts')
       .then(response => response.json())
-      .then(data.forEach(obj => {
-        document.querySelector('.posts-view').innerHTML += `
-        <div class="post">
-            <h3>${obj.fields.title}</h3>
-            <hr>
-            
-            <h5>${obj.fields.text}</h5>
-            <br>
-            <h5 style="font-size: 15px;">Created by: ${obj.fields.author}</h5>
-            
-            <div class="date">
-                Date of creation: <br>
-                ${obj.fields.creation_date}
-            </div> 
-            <div class="likes">
-                likes: ${obj.fields.likes}
+      .then(data => {
+        console.log(data)
+        data.forEach(obj => {
+            document.querySelector('.posts-view').innerHTML += `
+            <div class="post">
+                <h3>${obj.title}</h3>
+                <hr>
+                
+                <h5>${obj.text}</h5>
+                <br>
+                <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
+                
+                <div class="date">
+                    Date of creation: <br>
+                    ${obj.creation_date}
+                </div> 
+                <div class="likes">
+                    likes: ${obj.likes}
+                </div>
             </div>
-        </div>
-          `;
-      })
-    );
+            `;
+      });
+    });
 }
 // 
 function get_inbox(mailbox){
@@ -125,28 +131,25 @@ function get_inbox(mailbox){
 //
 
 function get_user_posts(profile_id){
-    console.log('get user post')
     fetch('/user_posts/'+profile_id)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
         data.forEach(obj => {
-            console.log(obj.fields.author)
             document.querySelector('.posts-view').innerHTML += `
             <div class="post">
-                <h3>${obj.fields.title}</h3>
+                <h3>${obj.title}</h3>
                 <hr>
                 
-                <h5>${obj.fields.text}</h5>
+                <h5>${obj.text}</h5>
                 <br>
-                <h5 style="font-size: 15px;">Created by: ${obj.fields.author}</h5>
+                <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
                 
                 <div class="date">
                     Date of creation: <br>
-                    ${obj.fields.creation_date}
+                    ${obj.creation_date}
                 </div> 
                 <div class="likes">
-                    likes: ${obj.fields.likes}
+                    likes: ${obj.likes}
                 </div>
             </div>
             `;
