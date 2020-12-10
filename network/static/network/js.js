@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
     get_profile_page();
     
-    get_posts();
+    //get_posts();
 });
 
 function get_profile_page(){
@@ -71,10 +71,7 @@ function get_profile_name(profile_id){
     return username;
 }
 
-async function get_posts(){
-    const response = await fetch('/all_posts');
-    const data = await response.json();
-
+function get_posts(){
     fetch('/all_posts')
       .then(response => response.json())
       .then(data.forEach(obj => {
@@ -99,32 +96,60 @@ async function get_posts(){
       })
     );
 }
-
-async function get_user_posts(profile_id){
-    const response = await fetch('/user_posts/'+profile_id);
-    const data = await response.json();
-
-    fetch('/user_posts/'+profile_id)
-      .then(response => response.json())
-      .then(data.forEach(obj => {
-        document.querySelector('.posts-view').innerHTML += `
-        <div class="post">
-            <h3>${obj.fields.title}</h3>
-            <hr>
-            
-            <h5>${obj.fields.text}</h5>
-            <br>
-            <h5 style="font-size: 15px;">Created by: ${obj.fields.author}</h5>
-            
-            <div class="date">
-                Date of creation: <br>
-                ${obj.fields.creation_date}
-            </div> 
-            <div class="likes">
-                likes: ${obj.fields.likes}
+// 
+function get_inbox(mailbox){
+    let i = 0;
+    fetch('/emails/'+mailbox)
+    .then(response => response.json())
+    .then(emails => {
+  
+      emails.forEach(email => {
+  
+        document.querySelector('#emails-view').innerHTML += `<div class="card" style="width: 18rem;">
+              <div id="email-${i}">
+                <div class="card-body" style="cursor:pointer;">
+                  <h5 class="card-title">${email.subject}</h5>
+                  <h6 class="card-subtitle mb-2">From: ${email.sender}</h6>
+                  <p class="card-text">${email.body}</p>
+                  <h6 class="card-subtitle mb-2">${email.timestamp}</h6>
+                  <button onclick="archive(${email.id})" class="btn btn-sm btn-outline-primary" style="background-color:white" >Archive</button>
+                </div>
+              </div>
             </div>
-        </div>
-          `;
-      })
-    );
+        `;
+        i++;
+      });
+  
+    });
+  }
+//
+
+function get_user_posts(profile_id){
+    console.log('get user post')
+    fetch('/user_posts/'+profile_id)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        data.forEach(obj => {
+            console.log(obj.fields.author)
+            document.querySelector('.posts-view').innerHTML += `
+            <div class="post">
+                <h3>${obj.fields.title}</h3>
+                <hr>
+                
+                <h5>${obj.fields.text}</h5>
+                <br>
+                <h5 style="font-size: 15px;">Created by: ${obj.fields.author}</h5>
+                
+                <div class="date">
+                    Date of creation: <br>
+                    ${obj.fields.creation_date}
+                </div> 
+                <div class="likes">
+                    likes: ${obj.fields.likes}
+                </div>
+            </div>
+            `;
+        });
+    });
 }

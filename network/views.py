@@ -38,17 +38,18 @@ def profile_json(request,profile_id):
     return JsonResponse(data)
 
 def all_posts(request):
-    posts = Post.objects.all().order_by('-creation_date')
 
-    json_data = serializers.serialize("json", posts)
-    return HttpResponse(json_data, content_type='application/json')
+    # Return posts in reverse chronologial order
+    posts = Post.objects.all().order_by("-creation_date").all()
+    return JsonResponse([post.serialize() for post in posts], safe=False)
 
 def user_posts(request, profile_id):
     author = User.objects.get(id = profile_id)
-    posts = Post.objects.filter( author = author).order_by('-creation_date')
+    
+    # Return posts in reverse chronologial order
+    posts = Post.objects.filter( author = author).order_by("-creation_date").all()
+    return JsonResponse([post.serialize() for post in posts], safe=False)
 
-    json_data = serializers.serialize("json", posts)
-    return HttpResponse(json_data, content_type='application/json')
 
 
 # PROFILE
