@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#all_posts').addEventListener('click', () => get_posts());
     //document.querySelector('#network').addEventListener('click', () => get_posts());
     // document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
-
+    
     // Listen for user name click
     //document.querySelector('.get-user').addEventListener('click', () => get_profile(dataset.user));
     // document.querySelector('#compose').addEventListener('click', compose_email);
@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     //document.querySelector('#compose-view').style.display = 'block';
 
     get_profile_page();
+
+    console.log('user: '+ get_current_user())
+    console.log('here'+user_id)
     //get_user_posts(2);
     //get_posts();
 });
@@ -125,3 +128,16 @@ function get_user_posts(profile_id){
         });
     });
 }
+
+function get_current_user(){
+    var user_id;
+
+    fetch('/get_user')
+    .then(response => response.json())
+    .then(data => {
+            user_id = data.id;
+            console.log(user_id);
+        });
+    return user_id;
+}
+console.log('curr user: '+get_current_user())

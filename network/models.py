@@ -6,6 +6,12 @@ class User(AbstractUser):
     followers = models.IntegerField(blank=True, null=True)
     following = models.IntegerField(blank=True, null=True)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.username,
+        }
+
     def __str__(self):
         return self.username
 

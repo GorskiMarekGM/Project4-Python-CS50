@@ -50,6 +50,12 @@ def user_posts(request, profile_id):
     posts = Post.objects.filter( author = author).order_by("-creation_date").all()
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
+def get_user(request):
+
+    # Return users in reverse chronologial order
+    user = User.objects.get(id = request.user.id)
+    return JsonResponse(user.serialize(), safe=False)
+
 
 
 # PROFILE
