@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Use buttons to toggle between views
     document.querySelector('.post').addEventListener('click', () => console.log('Post clicked!'));
 
-    get_posts(2);
+    get_user_posts(2);
 });
 
 
@@ -65,4 +65,33 @@ async function get_posts(){
           `;
       })
     );
-    }
+}
+
+async function get_user_posts(profile_id){
+    const response = await fetch('/user_posts/'+profile_id);
+    const data = await response.json();
+
+    fetch('/user_posts/'+profile_id)
+      .then(response => response.json())
+      .then(data.forEach(obj => {
+        document.querySelector('.posts-view').innerHTML += `
+        <div class="post">
+            <h3>${obj.fields.title}</h3>
+            <hr>
+            
+            <h5>${obj.fields.text}</h5>
+            <br>
+            <h5 style="font-size: 15px;">Created by: ${obj.fields.author.username}</h5>
+            
+            <div class="date">
+                Date of creation: <br>
+                ${obj.fields.creation_date}
+            </div> 
+            <div class="likes">
+                likes: ${obj.fields.likes}
+            </div>
+        </div>
+          `;
+      })
+    );
+}
