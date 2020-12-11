@@ -69,13 +69,34 @@ fetch('/profile/'+profile_id)
     get_user_posts(profile_id);
   });
 }
+
 function insert_follow_btn(profile_id){
     if (profile_id !=get_current_user_id()) {
-        return `<button type="button" id="button" class="btn btn-primary">Follow</button>`;
+        return `<button type="button" id="button" class="btn btn-primary" onclick = "follow_profile(${get_current_user_id(),profile_id})">Follow</button>`;
     }else{
         return ``;
     }
 }
+
+function follow_profile(current_user, profile_id){
+    fetch('/follow/'+current_user+'/'+profile_id, {
+        method: 'PUT',
+        body: JSON.stringify({
+            current_user: current_user,
+            profile_id: profile_id
+        })
+      })
+}
+
+function read_true(id){
+    fetch('/emails/'+id, {
+      method: 'PUT',
+      body: JSON.stringify({
+          read: true
+      })
+    })
+  }
+
 function get_posts(){
     document.querySelector('.new_post').style.display = 'none';
     document.querySelector('.posts-view').innerHTML = '';

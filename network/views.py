@@ -77,6 +77,39 @@ def profile(request):
         "user": request.user,
     })
 
+@login_required
+def follow(request):
+
+    # Update whether email is read or should be archived
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("current_user") is not None:
+            current_profile_id = data["current_user"]
+        if data.get("profile_id") is not None:
+            followed_profile_id = data["profile_id"]
+
+        current_profile = User.objects.get(id = current_profile_id)
+        followed_profile = User.objects.get(id = followed_profile_id)
+
+    #    >>> user1 = User.objects.get(id = 6) 
+    #     >>> user2 = User.objects.get(id = 7)
+    #     >>> prof = Profile(9) 
+    #     >>> prof.save()
+    #     >>> prof.following.add(user1,user2) 
+    #     >>> prof.user = user1
+    #     >>> prof.save()
+
+
+        email.save()
+        return HttpResponse(status=204)
+
+    # Email must be via PUT
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)
+    pass
+
 # POSTS
 def addPost(request):
     if request.method == "POST":
@@ -150,6 +183,9 @@ def register(request):
         try:
             user = User.objects.create_user(username = username, email = email, password = password)
             user.save()
+
+            profile = Profile.objects.create(user=user)
+            profile.save()
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken."

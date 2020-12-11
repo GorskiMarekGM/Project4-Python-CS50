@@ -13,9 +13,9 @@ class User(AbstractUser):
         return self.username
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    following = models.ManyToManyField(User, blank=True, related_name="following")
-    followers = models.ManyToManyField(User, blank=True, related_name="followers")
+    user = models.OneToOneField(User, blank=True, null=True, on_delete=models.CASCADE)
+    following = models.ManyToManyField(User, blank=True, null=True, related_name="following")
+    followers = models.ManyToManyField(User, blank=True, null=True, related_name="followers")
 
     def serialize(self):
         return {
@@ -24,11 +24,6 @@ class Profile(models.Model):
             "followers": self.followers.count,
             "following_users": self.following,
             "followers_user": self.followers,
-        }
-    
-    def count(self):
-        return{
-            ""
         }
 
 class Post(models.Model):
