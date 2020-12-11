@@ -72,6 +72,7 @@ fetch('/profile/'+profile_id)
 
 function insert_follow_btn(profile_id){
     if (profile_id !=get_current_user_id()) {
+        console.log('PID:'+profile_id+' CURR: '+get_current_user_id());
         return `<button type="button" id="button" class="btn btn-primary" onclick = "follow_profile(${get_current_user_id(),profile_id})">Follow</button>`;
     }else{
         return ``;

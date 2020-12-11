@@ -78,7 +78,17 @@ def profile(request):
     })
 
 @login_required
-def follow(request):
+def follow(request, current_user, followed_profile):
+
+    # Query for requested email
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        return JsonResponse({"error": "Profile not found."}, status=404)
+
+    # Return email contents
+    if request.method == "GET":
+        return JsonResponse(profile.serialize())
 
     # Update whether email is read or should be archived
     if request.method == "PUT":
@@ -91,24 +101,29 @@ def follow(request):
         current_profile = User.objects.get(id = current_profile_id)
         followed_profile = User.objects.get(id = followed_profile_id)
 
-    #    >>> user1 = User.objects.get(id = 6) 
-    #     >>> user2 = User.objects.get(id = 7)
-    #     >>> prof = Profile(9) 
-    #     >>> prof.save()
-    #     >>> prof.following.add(user1,user2) 
-    #     >>> prof.user = user1
-    #     >>> prof.save()
+        get_profile = Profile.objects.get(user = current_profile)
+        get_profile.following.add(followed_profile)
 
+        get_profile_followed = Profile.objects.get(user = followed_profile)
+        get_profile_followed.followers.add(current_profile)
 
-        email.save()
+        get_profile.save()
+        get_profile_followed.save()
+
+#    >>> user1 = User.objects.get(id = 6) 
+#     >>> user2 = User.objects.get(id = 7)
+#     >>> prof = Profile(9) 
+#     >>> prof.save()
+#     >>> prof.following.add(user1,user2) 
+#     >>> prof.user = user1
+#     >>> prof.save()
         return HttpResponse(status=204)
 
     # Email must be via PUT
     else:
         return JsonResponse({
-            "error": "PUT request required."
+            "error": "GET or PUT request required."
         }, status=400)
-    pass
 
 # POSTS
 def addPost(request):

@@ -18,12 +18,13 @@ class Profile(models.Model):
     followers = models.ManyToManyField(User, blank=True, null=True, related_name="followers")
 
     def serialize(self):
+        
         return {
             "profileID":self.user.id,
-            "following": self.following.count,
-            "followers": self.followers.count,
-            "following_users": self.following,
-            "followers_user": self.followers,
+            "following": int(self.following.all().count()),
+            "followers": int(self.followers.all().count()),
+            # "following_users": self.following,
+            # "followers_user": self.followers,
         }
 
 class Post(models.Model):
