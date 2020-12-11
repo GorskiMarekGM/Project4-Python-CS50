@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //document.querySelector('#compose-view').style.display = 'block';
 
     get_profile_page();
-    console.log('hehe'+get_current_user_id());
+    console.log('current user'+get_current_user_id());
 });
 
 function get_profile_page(){
@@ -56,7 +56,10 @@ fetch('/profile/'+profile_id)
         </div>
         <div class="row" style="text-align: center;">
             <div class="col-sm">${data.followers}</div>
-                <div class="col-sm"><button type="button" id="button" class="btn btn-primary">Follow</button></div>
+                <div class="col-sm">
+                    `+
+                    insert_follow_btn(profile_id)                   
+                +`</div>
             <div class="col-sm">${data.following}</div>
         </div>
     </div>
@@ -66,7 +69,13 @@ fetch('/profile/'+profile_id)
     get_user_posts(profile_id);
   });
 }
-
+function insert_follow_btn(profile_id){
+    if (profile_id !=get_current_user_id()) {
+        return `<button type="button" id="button" class="btn btn-primary">Follow</button>`;
+    }else{
+        return ``;
+    }
+}
 function get_posts(){
     document.querySelector('.new_post').style.display = 'none';
     document.querySelector('.posts-view').innerHTML = '';
@@ -126,7 +135,6 @@ function get_user_posts(profile_id){
         });
     });
 }
-
 function get_current_user_id(){
     try {
         //get current user
