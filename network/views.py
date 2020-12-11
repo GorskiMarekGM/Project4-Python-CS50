@@ -9,7 +9,7 @@ from datetime import datetime
 import json
 from django.core import serializers
 
-from .models import User, Post
+from .models import *
 
 class PostForm(forms.Form):
     title = forms.CharField(label="title")
@@ -25,14 +25,16 @@ def index(request):
 # JSON
 @login_required
 def profile_json(request,profile_id):
-    following = User.objects.get(id = profile_id).following
-    followers = User.objects.get(id = profile_id).followers
-    username = User.objects.get(id = profile_id).username
+    user = User.objects.get(id = profile_id)
+    following = Profile.objects.get(user = user).following.all()
+    followers = Profile.objects.get(user = user).followers.all()
+
+    userName = user.username
     
     data = {
-        "userName": username,
-        "following": following,
-        "followers": followers,
+        "userName": userName,
+        "following": len(following),
+        "followers": len(followers)
     }
 
     return JsonResponse(data)
@@ -146,7 +148,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username = username, email = email, password = password, followers = 0, following = 0)
+            user = User.objects.create_user(username = username, email = email, password = password)
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {

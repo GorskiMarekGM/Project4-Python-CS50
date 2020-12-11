@@ -3,9 +3,6 @@ from django.db import models
 
 
 class User(AbstractUser):
-    followers = models.IntegerField(default = 0,blank=True, null=True)
-    following = models.IntegerField(default = 0,blank=True, null=True)
-
     def serialize(self):
         return {
             "id": self.id,
@@ -15,6 +12,24 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    following = models.ManyToManyField(User, blank=True, related_name="following")
+    followers = models.ManyToManyField(User, blank=True, related_name="followers")
+
+    def serialize(self):
+        return {
+            "profileID":self.user.id,
+            "following": self.following.count,
+            "followers": self.followers.count,
+            "following_users": self.following,
+            "followers_user": self.followers,
+        }
+    
+    def count(self):
+        return{
+            ""
+        }
 
 class Post(models.Model):
     title = models.CharField(max_length=64)
