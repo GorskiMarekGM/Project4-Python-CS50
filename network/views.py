@@ -56,6 +56,13 @@ def get_user(request):
     user = User.objects.get(id = request.user.id)
     return JsonResponse(user.serialize(), safe=False)
 
+def get_following(request, profile_id):
+    user = User.objects.get(id = profile_id)
+
+    # Return posts in reverse chronologial order
+    follow_posts = Post.objects.filter( author = author).order_by("-creation_date").all()
+    return JsonResponse([post.serialize() for post in posts], safe=False)
+
 
 
 # PROFILE
@@ -139,7 +146,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username = username, email = email, password = password, followers = 0, following = 0)
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {

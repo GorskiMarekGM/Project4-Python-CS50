@@ -1,3 +1,5 @@
+var user_id
+
 document.addEventListener('DOMContentLoaded', function() {
 
 
@@ -14,11 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //document.querySelector('#compose-view').style.display = 'block';
 
     get_profile_page();
-
-    console.log('user: '+ get_current_user())
-    console.log('here'+user_id)
-    //get_user_posts(2);
-    //get_posts();
+    console.log('hehe'+get_current_user_id());
 });
 
 function get_profile_page(){
@@ -129,15 +127,14 @@ function get_user_posts(profile_id){
     });
 }
 
-function get_current_user(){
-    var user_id;
-
-    fetch('/get_user')
-    .then(response => response.json())
-    .then(data => {
-            user_id = data.id;
-            console.log(user_id);
-        });
-    return user_id;
+function get_current_user_id(){
+    try {
+        //get current user
+        user_id = JSON.parse(document.getElementById('user_id').textContent);
+        console.log('current_user_id: '+user_id);
+    } catch (error) {
+        console.log('User is not logged in!')
+    }
+    return user_id
 }
-console.log('curr user: '+get_current_user())
+
