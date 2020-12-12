@@ -93,8 +93,9 @@ def follow(request, followed_profile):
     # Update whether email is read or should be archived
     if request.method == "PUT":
         data = json.loads(request.body)
-        if data.get("current_user") is not None:
-            current_profile_id = data["current_user"]
+
+        current_profile_id = request.user
+
         if data.get("profile_id") is not None:
             followed_profile_id = data["profile_id"]
 

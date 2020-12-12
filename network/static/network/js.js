@@ -73,17 +73,16 @@ fetch('/profile/'+profile_id)
 function insert_follow_btn(profile_id){
     if (profile_id !=get_current_user_id()) {
         console.log('PID:'+profile_id+' CURR: '+get_current_user_id());
-        return `<button type="button" id="button" class="btn btn-primary" onclick = "follow_profile(${get_current_user_id(),profile_id})">Follow</button>`;
+        return `<button type="button" id="button" class="btn btn-primary" onclick = "follow_profile(${profile_id})">Follow</button>`;
     }else{
         return ``;
     }
 }
 
-function follow_profile(current_user, profile_id){
-    fetch('/follow/'+current_user+'/'+profile_id, {
+function follow_profile(profile_id){
+    fetch('/follow/'+profile_id, {
         method: 'PUT',
         body: JSON.stringify({
-            current_user: current_user,
             profile_id: profile_id
         })
       })
