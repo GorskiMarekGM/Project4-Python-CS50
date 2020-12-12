@@ -78,11 +78,11 @@ def profile(request):
     })
 
 @login_required
-def follow(request, current_user, followed_profile):
+def follow(request, followed_profile):
 
-    # Query for requested email
+    # Query for requested email 
     try:
-        profile = Profile.objects.get(user=request.user)
+        profile = Profile.objects.get(user=followed_profile)
     except Profile.DoesNotExist:
         return JsonResponse({"error": "Profile not found."}, status=404)
 
