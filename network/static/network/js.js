@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Use buttons to toggle between views
     document.querySelector('#all_posts').addEventListener('click', () => get_posts());
+    document.querySelector('#following').addEventListener('click', () => get_following_posts());
     //document.querySelector('#network').addEventListener('click', () => get_posts());
     // document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
     
@@ -76,7 +77,7 @@ fetch('/profile/'+profile_id)
         </div>
         <div class="row" style="text-align: center;">
             <div class="col-sm">${data.followers}</div>
-                <div class="col-sm">
+                <div class="col-sm" id="insert-button">
                     `+
                     insert_follow_btn(profile_id)                   
                 +`</div>
@@ -91,9 +92,24 @@ fetch('/profile/'+profile_id)
 }
 
 function insert_follow_btn(profile_id){
-    if (profile_id !=get_current_user_id()) {
-        console.log('PID:'+profile_id+' CURR: '+get_current_user_id());
-        return `<button type="button" id="button" class="btn btn-primary" onclick = "follow_profile(${profile_id})">Follow</button>`;
+    current_user = get_current_user_id();
+    if (profile_id != current_user) {
+
+        fetch('/is_follower/'+ current_user +'/'+profile_id)
+        .then(response => response.json())
+        .then(data => { 
+            result = data.result
+            console.log("result: " + result)
+            if(result == true){
+                document.getElementById('insert-button').innerHTML = `
+                <button type="button" id="button" class="btn btn-primary" onclick = "unfollow_profile(${profile_id})">Unfollow</button>`;
+            }else{
+                document.getElementById('insert-button').innerHTML = `
+                <button type="button" id="button" class="btn btn-primary" onclick = "follow_profile(${profile_id})">Follow</button>`;
+            }
+        })
+        console.log('PID:'+profile_id+' CURR: '+ current_user);
+        
     }else{
         return ``;
     }
@@ -110,9 +126,20 @@ function follow_profile(profile_id){
             profile_id: profile_id
         })
       })
-      .then(
-          location.reload()
-      );
+}
+
+function unfollow_profile(profile_id){
+    console.log("im at unfollow profile")
+    fetch('/unfollow/'+profile_id, {
+        method: 'PUT',
+        headers:{
+            'Content-Type':'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({
+            profile_id: profile_id
+        })
+      })
 }
 
 function read_true(id){
@@ -133,6 +160,38 @@ function get_posts(){
     document.querySelector('.posts-view').innerHTML = '';
 
     fetch('/all_posts')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        data.forEach(obj => {
+            document.querySelector('.posts-view').innerHTML += `
+            <div class="post">
+                <h3>${obj.title}</h3>
+                <hr>
+                
+                <h5>${obj.text}</h5>
+                <br>
+                <div class="get-user" onclick = "get_profile(${obj.author_id})">
+                    <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
+                </div>
+                <div class="date">
+                    Date of creation: <br>
+                    ${obj.creation_date}
+                </div> 
+                <div class="likes">
+                    likes: ${obj.likes}
+                </div>
+            </div>
+            `;
+      });
+    });
+}
+
+function get_following_posts(){
+    document.querySelector('.new_post').style.display = 'none';
+    document.querySelector('.posts-view').innerHTML = '';
+
+    fetch('/following_posts')
       .then(response => response.json())
       .then(data => {
         console.log(data)

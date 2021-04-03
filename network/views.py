@@ -45,6 +45,24 @@ def all_posts(request):
     posts = Post.objects.all().order_by("-creation_date").all()
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
+def following_posts(request):
+
+    # Return posts of followed users
+    user = request.user
+    print(user)
+    following = Profile.objects.get(user = user).following.all()
+    print(following)
+    posts = []
+    for f in following:
+        print(f)
+        posts2 = Post.objects.filter(author = f)
+
+        posts.append(posts2)
+
+    return JsonResponse({
+                "result": posts
+            }, status=200)
+
 def user_posts(request, profile_id):
     author = User.objects.get(id = profile_id)
 
@@ -70,8 +88,8 @@ def is_follower(request, is_user1, following_user2):
         is_user1 = User.objects.get(id = is_user1)
         following_user2 = User.objects.get(id = following_user2)
 
-        followers_user2 = Profile.objects.get(user = following_user2).following.all()
-        
+        followers_user2 = Profile.objects.get(user = following_user2).followers.all()
+
         if followers_user2.filter(username = is_user1).count() > 0:
             result = True
         else:
@@ -84,13 +102,6 @@ def is_follower(request, is_user1, following_user2):
         return JsonResponse({
                 "result": False
             }, status=400)
-
-    # profile_user = Profile.objects.get(user = user)
-
-    # Follow user
-    # follow_posts = Post.objects.filter( author = author).order_by("-creation_date").all()
-    # return JsonResponse([post.serialize() for post in posts], safe=False)
-
 
 
 # PROFILE
@@ -144,6 +155,49 @@ def follow(request, followed_profile):
         return JsonResponse({
             "error": "GET or PUT request required."
         }, status=400)
+
+@login_required
+def unfollow(request, unfollowed_profile):
+
+   # Query for requested email 
+    try:
+        profile = Profile.objects.get(user=unfollowed_profile)
+    except Profile.DoesNotExist:
+        return JsonResponse({"error": "Profile not found."}, status=404)
+
+    # Return email contents
+    if request.method == "GET":
+        return JsonResponse(profile.serialize())
+
+    # Update whether email is read or should be archived
+    if request.method == "PUT":
+        data = json.loads(request.body)
+
+        current_profile_id = request.user.id
+
+        if data.get("profile_id") is not None:
+            followed_profile_id = data["profile_id"]
+
+        current_profile = User.objects.get(id = current_profile_id)
+        followed_profile = User.objects.get(id = followed_profile_id)
+
+        get_profile = Profile.objects.get(user = current_profile)
+        get_profile.following.remove(followed_profile)
+
+        get_profile_followed = Profile.objects.get(user = followed_profile)
+        get_profile_followed.followers.remove(current_profile)
+
+        get_profile.save()
+        get_profile_followed.save()
+
+        return HttpResponse(status=204)
+
+    # Email must be via PUT
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
+
 
 # POSTS
 def addPost(request):
