@@ -13,7 +13,7 @@ class User(AbstractUser):
         return self.username
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, blank=True, null=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     following = models.ManyToManyField(User, blank=True, null=True, related_name="following")
     followers = models.ManyToManyField(User, blank=True, null=True, related_name="followers")
 

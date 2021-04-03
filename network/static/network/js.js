@@ -1,4 +1,24 @@
-var user_id
+
+var user = '{{request.user}}'
+
+function getToken(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getToken('csrftoken')
+
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -82,15 +102,26 @@ function insert_follow_btn(profile_id){
 function follow_profile(profile_id){
     fetch('/follow/'+profile_id, {
         method: 'PUT',
+        headers:{
+            'Content-Type':'application/json',
+            'X-CSRFToken': csrftoken,
+        },
         body: JSON.stringify({
             profile_id: profile_id
         })
       })
+      .then(
+          location.reload()
+      );
 }
 
 function read_true(id){
     fetch('/emails/'+id, {
       method: 'PUT',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken': csrftoken,
+        },
       body: JSON.stringify({
           read: true
       })

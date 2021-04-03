@@ -61,9 +61,35 @@ def get_user(request):
 def get_following(request, profile_id):
     user = User.objects.get(id = profile_id)
 
-    # Return posts in reverse chronologial order
+    # Return followers
     follow_posts = Post.objects.filter( author = author).order_by("-creation_date").all()
     return JsonResponse([post.serialize() for post in posts], safe=False)
+
+def is_follower(request, is_user1, following_user2):
+    try:
+        is_user1 = User.objects.get(id = is_user1)
+        following_user2 = User.objects.get(id = following_user2)
+
+        followers_user2 = Profile.objects.get(user = following_user2).following.all()
+        
+        if followers_user2.filter(username = is_user1).count() > 0:
+            result = True
+        else:
+            result = False
+
+        return JsonResponse({
+                "result": result
+            }, status=200)
+    except:
+        return JsonResponse({
+                "result": False
+            }, status=400)
+
+    # profile_user = Profile.objects.get(user = user)
+
+    # Follow user
+    # follow_posts = Post.objects.filter( author = author).order_by("-creation_date").all()
+    # return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
 
@@ -94,7 +120,7 @@ def follow(request, followed_profile):
     if request.method == "PUT":
         data = json.loads(request.body)
 
-        current_profile_id = request.user
+        current_profile_id = request.user.id
 
         if data.get("profile_id") is not None:
             followed_profile_id = data["profile_id"]
@@ -111,13 +137,6 @@ def follow(request, followed_profile):
         get_profile.save()
         get_profile_followed.save()
 
-#    >>> user1 = User.objects.get(id = 6) 
-#     >>> user2 = User.objects.get(id = 7)
-#     >>> prof = Profile(9) 
-#     >>> prof.save()
-#     >>> prof.following.add(user1,user2) 
-#     >>> prof.user = user1
-#     >>> prof.save()
         return HttpResponse(status=204)
 
     # Email must be via PUT

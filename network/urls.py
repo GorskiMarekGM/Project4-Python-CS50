@@ -20,6 +20,7 @@ urlpatterns = [
     path("get_user", views.get_user, name="get_user"),
     path("get_following/<int:profile_id>", views.get_following, name="get_following"),
     path("follow/<int:followed_profile>", views.follow, name="follow"),
+    path("is_follower/<int:is_user1>/<int:following_user2>", views.is_follower, name="is_follower"),
 
 
 ]
