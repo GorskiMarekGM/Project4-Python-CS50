@@ -52,16 +52,18 @@ def following_posts(request):
     print(user)
     following = Profile.objects.get(user = user).following.all()
     print(following)
+
     posts = []
     for f in following:
-        print(f)
-        posts2 = Post.objects.filter(author = f)
+        author = User.objects.get(id = f.id)
+        
+        # Return posts in reverse chronologial order
+        posts += Post.objects.filter( author = author).order_by("-creation_date").all()
 
-        posts.append(posts2)
+    posts.sort(key=lambda r: r.creation_date, reverse=True)
 
-    return JsonResponse({
-                "result": posts
-            }, status=200)
+    return JsonResponse([post.serialize() for post in posts], safe=False)
+
 
 def user_posts(request, profile_id):
     author = User.objects.get(id = profile_id)
@@ -78,10 +80,10 @@ def get_user(request):
 
 def get_following(request, profile_id):
     user = User.objects.get(id = profile_id)
-
+    
     # Return followers
-    follow_posts = Post.objects.filter( author = author).order_by("-creation_date").all()
-    return JsonResponse([post.serialize() for post in posts], safe=False)
+    follow_posts = Post.objects.filter( author = user).order_by("-creation_date").all()
+    return JsonResponse([post.serialize() for post in follow_posts], safe=False)
 
 def is_follower(request, is_user1, following_user2):
     try:
