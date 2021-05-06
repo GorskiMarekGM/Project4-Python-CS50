@@ -20,25 +20,25 @@ function getToken(name) {
 var csrftoken = getToken('csrftoken')
 
 
-document.addEventListener('DOMContentLoaded', function() {
+// document.addEventListener('DOMContentLoaded', function() {
 
 
-    // Use buttons to toggle between views
-    document.querySelector('#all_posts').addEventListener('click', () => get_posts());
-    document.querySelector('#following').addEventListener('click', () => get_following_posts());
-    //document.querySelector('#network').addEventListener('click', () => get_posts());
-    // document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
+//     // Use buttons to toggle between views
+//     document.querySelector('#all_posts').addEventListener('click', () => get_posts());
+//     document.querySelector('#following').addEventListener('click', () => get_following_posts());
+//     //document.querySelector('#network').addEventListener('click', () => get_posts());
+//     // document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
     
-    // Listen for user name click
-    //document.querySelector('.get-user').addEventListener('click', () => get_profile(dataset.user));
-    // document.querySelector('#compose').addEventListener('click', compose_email);
-    //data-user="${obj.author_id}"
-     // Show compose view and hide other views
-    //document.querySelector('#compose-view').style.display = 'block';
+//     // Listen for user name click
+//     //document.querySelector('.get-user').addEventListener('click', () => get_profile(dataset.user));
+//     // document.querySelector('#compose').addEventListener('click', compose_email);
+//     //data-user="${obj.author_id}"
+//      // Show compose view and hide other views
+//     //document.querySelector('#compose-view').style.display = 'block';
 
-    get_profile_page();
-    console.log('current user'+get_current_user_id());
-});
+//     get_profile_page();
+//     console.log('current user'+get_current_user_id());
+// });
 
 function get_profile_page(){
     try {
@@ -56,6 +56,7 @@ function get_profile_page(){
 //   document.querySelector('#compose-view').style.display = 'block';
 
 function get_profile(profile_id){
+    console.log("profile id" + profile_id)
 
 document.querySelector('.new_post').style.display = 'none';
 document.querySelector('.posts-view').innerHTML = '';
@@ -155,6 +156,7 @@ function read_true(id){
     })
   }
 
+
 function get_posts(){
     document.querySelector('.new_post').style.display = 'none';
     document.querySelector('.posts-view').innerHTML = '';
@@ -163,6 +165,7 @@ function get_posts(){
       .then(response => response.json())
       .then(data => {
         console.log(data)
+        pagination(data,2,4)
         data.forEach(obj => {
             document.querySelector('.posts-view').innerHTML += `
             <div class="post">
@@ -257,3 +260,57 @@ function get_current_user_id(){
     return user_id
 }
 
+
+
+// Pagination
+
+// var state = {
+//     'querySet': '',
+
+//     'page':1,
+//     'rows':5,
+// }
+
+// function pagination (querySet, page, rows){
+//     var trimStart = (page -1) * rows
+//     var trimEnd = page * rows
+
+//     var trimedData = querySet.slice(trimStart, trimEnd)
+
+//     var pages = Math.ceil(querySet.length / rows)
+//     console.log('trimed ', trimedData)
+//     return{
+//         'querySet':trimedData,
+//         'pages':pages
+//     }
+// }
+
+// function pageButtons(pages){
+//     var wrapper = document.getElementById('pagination-wrapper')
+//     wrapper.innerHTML = ''
+
+//     for (var page = 1; page <= pages; page ++){
+//         wrapper.innerHTML += '<button value=$(page) class="page btn btn-info">$(page)</button>'
+//     }
+// }
+// function buildTable(){
+//     var table = $('#table-body')
+
+//     var data = pagination(state.querySer, state.page, state.rows)
+//     console.log('data: ',data)
+
+//     myList = data.querySet
+
+//     for(var i=1 in myList){
+
+//         var row = `<tr>
+//                         <td>${myList[i].rank}</td>
+//                         <td>${myList[i].first_name}</td>
+//                         <td>${myList[i].last_name}</td>
+//                     </tr>`
+
+//         table.append(row)
+
+//     }               
+//     pageButtons(data.pages)
+// }

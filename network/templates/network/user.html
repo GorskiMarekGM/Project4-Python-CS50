@@ -3,23 +3,26 @@
 
 {% block new_post %}
 
-<!-- add new post section -->
-{% if user.is_authenticated %}
-<div class="post-add-container">
-    <form action="{% url 'addPost' %}" method="POST">
-        {% csrf_token %}
-        <h3>Create a New Post</h3>
-        <hr>
-        <h5>Title: </h5> <input name="title"></input>
-        <br>
-        <br>
-        <textarea class="form-control rounded-0" name="postText" rows="5"></textarea>
-       
-        <br>
-        <input type="submit" value="Post" class="btn btn-primary mb-2">
-    </form>
+<div class="profile-container">
+    <div class="row" style="text-align: center;">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">{{data.userName}}</div>
+        <div class="col-sm-2"></div>
+    </div>
+    <div class="row" style="text-align: center;">
+        <div class="col-sm">Followers</div>
+        <div class="col-sm"></div>
+        <div class="col-sm">Following</div>
+    </div>
+    <div class="row" style="text-align: center;">
+        <div class="col-sm">{{data.followers}}</div>
+            <div class="col-sm" id="insert-button">
+
+            </div>
+        <div class="col-sm">{{data.following}}</div>
+    </div>
 </div>
-{% endif %}
+
 {% for post in page_obj %}
 <div class="post">
     <h3>{{post.title}}</h3>
@@ -57,4 +60,9 @@
         {% endif %}
     </span>
 </div>
+
+<script>
+    var profile_id = '{{data.id}}'
+    insert_follow_btn(profile_id)
+</script>
 {% endblock %}

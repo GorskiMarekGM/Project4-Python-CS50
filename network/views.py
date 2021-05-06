@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from django.urls import reverse
 from django import forms
 from datetime import datetime
@@ -15,12 +16,81 @@ class PostForm(forms.Form):
     title = forms.CharField(label="title")
     postText = forms.Textarea()
 
-def index(request):
-    posts_list = Post.objects.all().order_by('-creation_date')
+# def index(request):
+#     posts_list = Post.objects.all().order_by('-creation_date')  
 
-    return render(request, "network/index.html",{
+#     return render(request, "network/index.html",{
+#         "posts_list" : posts_list,
+#     })
+
+def pagination(request):
+    posts_list = Post.objects.all().order_by('-creation_date')  
+
+    return render(request, "network/pagination.html",{
         "posts_list" : posts_list,
     })
+
+def index(request):
+    posts_list = Post.objects.all().order_by('-creation_date') 
+    paginator = Paginator(posts_list, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'network/index.html', {'page_obj': page_obj})
+
+@login_required
+def user(request):
+
+    following = Profile.objects.get(user = request.user).following.all()
+    followers = Profile.objects.get(user = request.user).followers.all()
+    
+    data = {
+        "userName": request.user.username,
+        "following": len(following),
+        "followers": len(followers)
+    }
+    
+    posts_list = Post.objects.filter(author=request.user).order_by('-creation_date')
+    paginator = Paginator(posts_list, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "network/user.html",{
+        "posts_list" : posts_list,
+        "data": data,
+        "page_obj":page_obj,
+        "id":request.user.id
+    })
+
+def allPosts(request):
+    posts_list = Post.objects.all().order_by('-creation_date') 
+    paginator = Paginator(posts_list, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'network/allposts.html', {'page_obj': page_obj})
+
+def following(request):
+    # posts_list = Post.objects.all().order_by('-creation_date') 
+    user = request.user
+    following = Profile.objects.get(user = user).following.all()
+    
+    posts = []
+    for f in following:
+        author = User.objects.get(id = f.id)
+        
+        # Return posts in reverse chronologial order
+        posts += Post.objects.filter( author = author).order_by("-creation_date").all()
+
+    posts.sort(key=lambda r: r.creation_date, reverse=True)
+
+    paginator = Paginator(posts, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'network/following.html', {'page_obj': page_obj})
+
 
 # JSON
 @login_required
@@ -221,14 +291,6 @@ def addPost(request):
         return redirect('index')
         
     return redirect('index')
-
-# def postsList(request):
-#     posts_list = Post.objects.all().order_by('-creation_date')
-
-#     return render(request, "network/posts.html",{
-#         "posts_list" : posts_list,
-#     })
-
 
 
 # LOGING, AND SIGNING SECTION

@@ -3,23 +3,6 @@
 
 {% block new_post %}
 
-<!-- add new post section -->
-{% if user.is_authenticated %}
-<div class="post-add-container">
-    <form action="{% url 'addPost' %}" method="POST">
-        {% csrf_token %}
-        <h3>Create a New Post</h3>
-        <hr>
-        <h5>Title: </h5> <input name="title"></input>
-        <br>
-        <br>
-        <textarea class="form-control rounded-0" name="postText" rows="5"></textarea>
-       
-        <br>
-        <input type="submit" value="Post" class="btn btn-primary mb-2">
-    </form>
-</div>
-{% endif %}
 {% for post in page_obj %}
 <div class="post">
     <h3>{{post.title}}</h3>
