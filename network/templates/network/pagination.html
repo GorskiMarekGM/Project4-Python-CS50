@@ -9,7 +9,7 @@
     <h5>{{post.text}}</h5>
     <br>
     <div class="get-user">
-        <h5 style="font-size: 15px;">Created by: <a href="{% url 'user' %}">{{post.author}}</a></h5>
+        <h5 style="font-size: 15px;" onclick = "get_profile('{{post.author.id}}')">Created by: {{post.author}}</h5>
     </div>
     <div class="date">
         Date of creation: <br>

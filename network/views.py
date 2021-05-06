@@ -69,7 +69,9 @@ def allPosts(request):
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'network/allposts.html', {'page_obj': page_obj})
+    return render(request, 'network/allposts.html', {
+        'page_obj': page_obj
+        })
 
 def following(request):
     # posts_list = Post.objects.all().order_by('-creation_date') 
@@ -114,6 +116,12 @@ def all_posts(request):
     # Return posts in reverse chronologial order
     posts = Post.objects.all().order_by("-creation_date").all()
     return JsonResponse([post.serialize() for post in posts], safe=False)
+
+def get_post(request, post_id):
+
+    post = Post.objects.get(id = post_id)
+    return JsonResponse(post.serialize())
+
 
 def following_posts(request):
 
@@ -292,6 +300,26 @@ def addPost(request):
         
     return redirect('index')
 
+def edit_post(request):
+    # if request.method == "POST":
+    #     form = PostForm(request.POST)
+    #     if form.is_valid():
+    #         title = form.cleaned_data["title"]
+    #         postText = form.data["postText"]
+    #         date = datetime.now()
+
+    #     else:
+    #         message = "Invalid form... Try again."
+    #         return render(request,"network/index.html",{
+    #         })
+            
+    #     # get_post = Post.get
+    #     # new_post = Post(title = title, text= postText,creation_date=date, likes = 0, author= request.user)
+    #     # new_post.save()
+
+    #     return redirect('index')
+        
+    return redirect('index')
 
 # LOGING, AND SIGNING SECTION
 def login_view(request):

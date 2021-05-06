@@ -4,7 +4,7 @@
 {% block new_post %}
 
 {% for post in page_obj %}
-<div class="post">
+<div class="post" id="{{post.id}}">
     <h3>{{post.title}}</h3>
     <hr>
     
@@ -17,7 +17,13 @@
         Date of creation: <br>
         {{post.creation_date}}
     </div> 
-    <div class="likes">
+    {% if request.user == post.author %}
+    <div class="likes" style="cursor: pointer; margin-left:10px;" onclick = "edit_post('{{post.id}}','{{post.title}}','{{post.text}}')">
+        Edit Post
+    </div>
+    {% endif %}
+
+    <div class="likes" >
         likes: {{post.likes}}
     </div>
 </div>
