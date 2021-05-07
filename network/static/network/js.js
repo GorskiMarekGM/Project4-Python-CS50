@@ -247,6 +247,7 @@ function get_user_posts(profile_id){
         });
     });
 }
+
 function get_current_user_id(){
     try {
         //get current user
@@ -257,11 +258,14 @@ function get_current_user_id(){
     }
     return user_id
 }
+
 function send(){
     var title = document.getElementById('title').value
     console.log(title)
     var area = document.getElementById('textArea').value
     console.log(area)
+
+
 }
 
 
@@ -287,3 +291,46 @@ function edit_post(post_id, title, text){
 
 
 
+// Likes
+
+$(document).ready(function(){
+    $('.like-form').submit(function(e){
+        // prevent from refreshing
+        e.preventDefault()
+        console.log('click')
+
+        const post_id = $(this).attr('id')
+        
+        const text = $(`.like${post_id}`).text()
+        var trim = $.trim(text)
+
+        const url = $(this).attr('action')
+
+        const likes = $(`.like-count${post_id}`).text()
+        const trimCount = parseInt(likes)
+
+        $.ajax({
+            type:'POST',
+            url:url,
+            data:{
+                'csrfmiddlewaretoken':token,
+                'post_id':post_id
+            },
+            success:function(response){
+                console.log("success",response)
+                if(trim === 'Unlike'){
+                    $(`.like${post_id}`).text('Like')
+                    res = trimCount - 1
+                    
+                }else{
+                    $(`.like${post_id}`).text('Unlike')
+                    res = trimCount + 1
+                }
+                $(`.like-count${post_id}`).text(res)
+            },
+            error: function(response){
+                console.log("Error",response)
+            }
+        })
+    })
+});

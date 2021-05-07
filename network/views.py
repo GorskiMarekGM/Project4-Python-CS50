@@ -16,19 +16,19 @@ class PostForm(forms.Form):
     title = forms.CharField(label="title")
     postText = forms.Textarea()
 
-# def index(request):
+# # def index(request):
+# #     posts_list = Post.objects.all().order_by('-creation_date')  
+
+# #     return render(request, "network/index.html",{
+# #         "posts_list" : posts_list,
+# #     })
+
+# def pagination(request):
 #     posts_list = Post.objects.all().order_by('-creation_date')  
 
-#     return render(request, "network/index.html",{
+#     return render(request, "network/pagination.html",{
 #         "posts_list" : posts_list,
 #     })
-
-def pagination(request):
-    posts_list = Post.objects.all().order_by('-creation_date')  
-
-    return render(request, "network/pagination.html",{
-        "posts_list" : posts_list,
-    })
 
 def index(request):
     posts_list = Post.objects.all().order_by('-creation_date') 
@@ -70,7 +70,8 @@ def allPosts(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'network/allposts.html', {
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'user' : request.user
         })
 
 def following(request):
@@ -183,25 +184,20 @@ def is_follower(request, is_user1, following_user2):
                 "result": False
             }, status=400)
 
-def like(request, user_id, post_id):
-    try:
-        is_user1 = User.objects.get(id = is_user1)
-        following_user2 = User.objects.get(id = following_user2)
+def like(request, post_id):
+    user = request.user
+    likedpost = Post.objects.get(pk=post_id)
 
-        followers_user2 = Profile.objects.get(user = following_user2).followers.all()
+    if user in likedpost.likes.all():
+        likedpost.likes.remove(user)
+        like = Like.objects.get(post=likedpost, user=user)
+        like.delete()
+    else:
+        like = Like.objects.get_or_create(post=likedpost, user=user)
+        likedpost.likes.add(user)
+        likedpost.save()
 
-        if followers_user2.filter(username = is_user1).count() > 0:
-            result = True
-        else:
-            result = False
-
-        return JsonResponse({
-                "result": result
-            }, status=200)
-    except:
-        return JsonResponse({
-                "result": False
-            }, status=400)
+    return HttpResponse('Success')
 
 # PROFILE
 def profile(request):
@@ -312,7 +308,7 @@ def addPost(request):
             return render(request,"network/index.html",{
             })
             
-        new_post = Post(title = title, text= postText,creation_date=date, likes = 0, author= request.user)
+        new_post = Post(title = title, text= postText,creation_date=date, author= request.user)
         new_post.save()
 
         return redirect('index')
@@ -325,7 +321,7 @@ def edit_post(request,post_id):
         textarea = request.POST["textarea"]
         post.text = textarea
         post.save()
-        return HttpResponse('success')
+        return redirect('index')
         
     return redirect('index')
 

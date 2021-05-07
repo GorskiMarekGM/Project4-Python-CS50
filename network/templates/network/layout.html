@@ -61,5 +61,59 @@
         
 
         <script src="{% static 'network/js.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </body>
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+    var token = '{{csrf_token}}'
+
+    function display_edit(){
+        document.getElementById('edit').style.display=""
+        document.getElementById('text-before').style.display="none"
+    }
+
+    $(document).ready(function(){
+        $('.like-form').submit(function(e){
+            // prevent from refreshing
+            e.preventDefault()
+
+            const post_id = $(this).attr('id')
+            
+            const text = $(`.like${post_id}`).text()
+            var trim = $.trim(text)
+
+            const url = $(this).attr('action')
+
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCount = parseInt(likes)
+
+            $.ajax({
+                type:'POST',
+                url:url,
+                data:{
+                    'csrfmiddlewaretoken':token,
+                    'post_id':post_id
+                },
+                success:function(response){
+                    console.log("success",response)
+                    if(trim === 'Unlike'){
+                        $(`.like${post_id}`).text('Like')
+                        res = trimCount - 1
+                        
+                    }else{
+                        $(`.like${post_id}`).text('Unlike')
+                        res = trimCount + 1
+                    }
+                    $(`.like-count${post_id}`).text(res)
+                },
+                error: function(response){
+                    console.log("Error",response)
+                }
+            })
+        })
+    });
+
+</script>
 </html>

@@ -23,14 +23,12 @@ class Profile(models.Model):
             "profileID":self.user.id,
             "following": int(self.following.all().count()),
             "followers": int(self.followers.all().count()),
-            # "following_users": self.following,
-            # "followers_user": self.followers,
         }
 
 class Post(models.Model):
     title = models.CharField(max_length=64)
     text = models.TextField()
-    likes = models.IntegerField()
+    likes = models.ManyToManyField('User', default=None, blank=True, related_name='likes')
     creation_date = models.DateTimeField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="author")
 
@@ -39,20 +37,18 @@ class Post(models.Model):
             "id": self.id,
             "title": self.title,
             "text": self.text,
-            "likes": self.likes,
+            "likes": self.like_set.count,
             "creation_date": self.creation_date.strftime("%b %d %Y, %I:%M %p"),
             "author": self.author.username,
             "author_id": self.author.id,
         }
 
     def __str__(self):
-            return f"ID:{self.id} Title:{self.title} Text:{self.text} Likes:{self.likes} Created:{self.creation_date} Author:{self.author}"
-
+            return f"ID:{self.id} Title:{self.title} Text:{self.text} Likes:{self.like_set.count} Created:{self.creation_date} Author:{self.author}"
 
 class Like(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
-
 
     def __str__(self):
         return str(self.post)

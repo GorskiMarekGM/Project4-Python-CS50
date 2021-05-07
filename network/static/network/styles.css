@@ -24,6 +24,7 @@
 }
 .likes{
     float: right;
+    padding: 0px 20px;
 }
 
 /* PROFILE CSS */
@@ -36,4 +37,7 @@
     text-align: center;
     font-weight: bold;
     font-size: 20px;
+}
+.btn-dark{
+    padding: 0px 15px;
 }
