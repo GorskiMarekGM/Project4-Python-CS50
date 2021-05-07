@@ -183,6 +183,25 @@ def is_follower(request, is_user1, following_user2):
                 "result": False
             }, status=400)
 
+def like(request, user_id, post_id):
+    try:
+        is_user1 = User.objects.get(id = is_user1)
+        following_user2 = User.objects.get(id = following_user2)
+
+        followers_user2 = Profile.objects.get(user = following_user2).followers.all()
+
+        if followers_user2.filter(username = is_user1).count() > 0:
+            result = True
+        else:
+            result = False
+
+        return JsonResponse({
+                "result": result
+            }, status=200)
+    except:
+        return JsonResponse({
+                "result": False
+            }, status=400)
 
 # PROFILE
 def profile(request):
@@ -300,24 +319,13 @@ def addPost(request):
         
     return redirect('index')
 
-def edit_post(request):
-    # if request.method == "POST":
-    #     form = PostForm(request.POST)
-    #     if form.is_valid():
-    #         title = form.cleaned_data["title"]
-    #         postText = form.data["postText"]
-    #         date = datetime.now()
-
-    #     else:
-    #         message = "Invalid form... Try again."
-    #         return render(request,"network/index.html",{
-    #         })
-            
-    #     # get_post = Post.get
-    #     # new_post = Post(title = title, text= postText,creation_date=date, likes = 0, author= request.user)
-    #     # new_post.save()
-
-    #     return redirect('index')
+def edit_post(request,post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(pk=post_id)
+        textarea = request.POST["textarea"]
+        post.text = textarea
+        post.save()
+        return HttpResponse('success')
         
     return redirect('index')
 

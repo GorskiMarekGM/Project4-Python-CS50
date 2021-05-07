@@ -257,23 +257,28 @@ function get_current_user_id(){
     }
     return user_id
 }
+function send(){
+    var title = document.getElementById('title').value
+    console.log(title)
+    var area = document.getElementById('textArea').value
+    console.log(area)
+}
+
 
 function edit_post(post_id, title, text){
     var field = document.getElementById(post_id)
 
     field.innerHTML = `
         <div class="post-edit-container">
-            <form action='edit_post' method="POST">
-                <h3>Edit your post!</h3>
-                <hr>
-                <h5>Title: </h5> <input name="title" value="${title}"></input>
-                <br>
-                <br>
-                <textarea class="form-control rounded-0" name="postText" rows="5">${text}</textarea>
-            
-                <br>
-                <input type="submit" value="Edit" class="btn btn-primary mb-2">
-            </form>
+            <h3>Edit your post!</h3>
+            <hr>
+            <h5>Title: </h5> <input id="title" name="title" value="${title}"></input>
+            <br>
+            <br>
+            <textarea class="form-control rounded-0" id="textArea" name="postText" rows="5">${text}</textarea>
+        
+            <br>
+            <div class="btn btn-primary mb-2" onclick=send() >Edit</div>
         </div>
         `;
     

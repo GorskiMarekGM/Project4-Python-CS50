@@ -49,3 +49,10 @@ class Post(models.Model):
             return f"ID:{self.id} Title:{self.title} Text:{self.text} Likes:{self.likes} Created:{self.creation_date} Author:{self.author}"
 
 
+class Like(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return str(self.post)
