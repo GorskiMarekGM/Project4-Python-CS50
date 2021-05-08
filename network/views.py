@@ -16,20 +16,6 @@ class PostForm(forms.Form):
     title = forms.CharField(label="title")
     postText = forms.Textarea()
 
-# # def index(request):
-# #     posts_list = Post.objects.all().order_by('-creation_date')  
-
-# #     return render(request, "network/index.html",{
-# #         "posts_list" : posts_list,
-# #     })
-
-# def pagination(request):
-#     posts_list = Post.objects.all().order_by('-creation_date')  
-
-#     return render(request, "network/pagination.html",{
-#         "posts_list" : posts_list,
-#     })
-
 def index(request):
     posts_list = Post.objects.all().order_by('-creation_date') 
     paginator = Paginator(posts_list, 10)

@@ -19,27 +19,6 @@ function getToken(name) {
 
 var csrftoken = getToken('csrftoken')
 
-
-// document.addEventListener('DOMContentLoaded', function() {
-
-
-//     // Use buttons to toggle between views
-//     document.querySelector('#all_posts').addEventListener('click', () => get_posts());
-//     document.querySelector('#following').addEventListener('click', () => get_following_posts());
-//     //document.querySelector('#network').addEventListener('click', () => get_posts());
-//     // document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
-    
-//     // Listen for user name click
-//     //document.querySelector('.get-user').addEventListener('click', () => get_profile(dataset.user));
-//     // document.querySelector('#compose').addEventListener('click', compose_email);
-//     //data-user="${obj.author_id}"
-//      // Show compose view and hide other views
-//     //document.querySelector('#compose-view').style.display = 'block';
-
-//     get_profile_page();
-//     console.log('current user'+get_current_user_id());
-// });
-
 function get_profile_page(){
     try {
         const userData = document.querySelector('#profile_link');
@@ -51,9 +30,6 @@ function get_profile_page(){
         
     }
 }
-//   // Show compose view and hide other views
-//   document.querySelector('#posts-view').style.display = 'none';
-//   document.querySelector('#compose-view').style.display = 'block';
 
 function get_profile(profile_id){
     console.log("profile id" + profile_id)
@@ -226,21 +202,35 @@ function get_user_posts(profile_id){
     .then(data => {
         data.forEach(obj => {
             document.querySelector('.posts-view').innerHTML += `
-            <div class="post">
-                <h3>${obj.title}</h3>
-                <hr>
-                
-                <h5>${obj.text}</h5>
-                <br>
-                <div class="get-user" onclick = "get_profile(${obj.author_id})">
-                    <h5 style="font-size: 15px;">Created by: ${obj.author}</h5>
-                </div>
-                <div class="date">
-                    Date of creation: <br>
-                    ${obj.creation_date}
-                </div> 
-                <div class="likes">
-                    likes: ${obj.likes}
+            <div class="post" id="{{post.id}}">
+                <div class="content">
+                    <h3>${obj.title}</h3>
+                    <hr>
+                    
+                    <div id="text-before">
+                        <h5>${obj.text}</h5>
+                    </div>
+
+                    <br>
+                    <div class="get-user">
+                        <h5 style="font-size: 15px;" onclick = "get_profile('${obj.author.id}')">Created by: ${obj.author}</h5>
+                    </div>
+                    <div class="date">
+                        Date of creation: <br>
+                        ${obj.creation_date}
+                    </div> 
+                    <div class="right-bottom" style="height: 60px;">
+                    
+                        <div class="likes" >
+                            likes:   <div class="like-count{{post.id}}" style="float: right;"> ${obj.likes}</div> 
+
+                        </div>
+                        <form class="like-form" id="{{post.id}}" method=post action="{% url 'like' post_id=post.id %}" style=" float: right;">
+
+                                <button class="btn btn-dark like{{post.id}}" type="submit" value="Save"> Like </button>
+                            
+                        </form>
+                    </div>
                 </div>
             </div>
             `;
@@ -287,50 +277,3 @@ function edit_post(post_id, title, text){
         `;
     
 }
-
-
-
-
-// Likes
-
-$(document).ready(function(){
-    $('.like-form').submit(function(e){
-        // prevent from refreshing
-        e.preventDefault()
-        console.log('click')
-
-        const post_id = $(this).attr('id')
-        
-        const text = $(`.like${post_id}`).text()
-        var trim = $.trim(text)
-
-        const url = $(this).attr('action')
-
-        const likes = $(`.like-count${post_id}`).text()
-        const trimCount = parseInt(likes)
-
-        $.ajax({
-            type:'POST',
-            url:url,
-            data:{
-                'csrfmiddlewaretoken':token,
-                'post_id':post_id
-            },
-            success:function(response){
-                console.log("success",response)
-                if(trim === 'Unlike'){
-                    $(`.like${post_id}`).text('Like')
-                    res = trimCount - 1
-                    
-                }else{
-                    $(`.like${post_id}`).text('Unlike')
-                    res = trimCount + 1
-                }
-                $(`.like-count${post_id}`).text(res)
-            },
-            error: function(response){
-                console.log("Error",response)
-            }
-        })
-    })
-});

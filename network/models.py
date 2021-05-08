@@ -37,7 +37,7 @@ class Post(models.Model):
             "id": self.id,
             "title": self.title,
             "text": self.text,
-            "likes": self.like_set.count,
+            "likes": Like.objects.filter(post = self).count(),
             "creation_date": self.creation_date.strftime("%b %d %Y, %I:%M %p"),
             "author": self.author.username,
             "author_id": self.author.id,
