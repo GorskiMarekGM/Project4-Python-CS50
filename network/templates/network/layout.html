@@ -69,9 +69,9 @@
 
     var token = '{{csrf_token}}'
 
-    function display_edit(){
-        document.getElementById('edit').style.display=""
-        document.getElementById('text-before').style.display="none"
+    function display_edit(post_id){
+        document.getElementById('edit'+post_id).style.display=""
+        document.getElementById('text-before'+post_id).style.display="none"
     }
 
     $(document).ready(function(){
