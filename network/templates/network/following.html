@@ -9,11 +9,11 @@
         <h3>{{post.title}}</h3>
         <hr>
         
-        <div id="text-before">
+        <div id="text-before{{post.id}}">
             <h5>{{post.text}}</h5>
         </div>
 
-        <div class="edit" id="edit" style="display: none;">
+        <div class="edit" id="edit{{post.id}}" style="display: none;">
             <form method=post action="{% url 'edit_post' post_id=post.id %}">
                 {% csrf_token %}
                 <textarea rows="10" class="form-control textarea-edit" name="textarea">{{post.content}}</textarea>          
@@ -34,7 +34,7 @@
         </div> 
         <div class="right-bottom" style="height: 60px;">
             {% if request.user == post.author %}
-            <div class="likes" style="cursor: pointer;" onclick = "display_edit()">
+            <div class="likes" style="cursor: pointer;" onclick = "display_edit('{{post.id}}')">
                 Edit Post
             </div>
             {% endif %}
