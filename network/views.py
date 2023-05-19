@@ -174,7 +174,7 @@ def is_follower(request, is_user1, following_user2):
     except:
         return JsonResponse({"result": False}, status=400)
 
-
+@login_required
 def like(request, post_id):
     user = request.user
     likedpost = Post.objects.get(pk=post_id)
