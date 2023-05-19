@@ -1,7 +1,17 @@
 <h1>Get started</h1>
-1. Create your virtual environment
-2. Activate it
-3. pip install -r requirements.txt
+1. Create your virtual environment <br>
+2. Activate it <br>
+3. install requirements
+
+
+```
+pip install -r requirements.txt
+```
+Makefile commands
+```
+make lint - lint code<br>
+make format - format code<br>
+```
 
 <h1>Specification</h1>
 Using Python, JavaScript, HTML, and CSS, complete the implementation of a social network that allows users to make posts, follow other users, and “like” posts. You must fulfill the following requirements:
